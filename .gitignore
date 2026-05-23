@@ -1,0 +1,16 @@
+# Ignore everything
+*
+
+# Allow directories to be traversed
+!*/
+
+# Track only source files
+!*.py
+!*.csv
+
+# Exclude large data files
+01_DEM/
+
+# Track repo management files
+!.gitignore
+!CLAUDE.md
