@@ -7,7 +7,7 @@ PROJ_DATUM=AUSTRALIAN GEODETIC 1984
 
 
 """
-print ' ABOUT to Start Simulation:- Importing Modules'
+print(' ABOUT to Start Simulation:- Importing Modules')
 #+++++START_MODULES_BLOCK
 #------------------------------------------------------------------------------
 # Import necessary modules
@@ -28,7 +28,7 @@ import anuga
 import string
 import glob
 
-print 'Got all std Serial Modules...'
+print('Got all std Serial Modules...')
 
 
 #+++++END_MODULES_BLOCK
@@ -74,7 +74,7 @@ basename = anuga.join('01_DEM','Sullivans_DEM_1_10_50')
 
 outname = anuga.join('Sullivans'+ Outname_Ext+RAIN_EVENT )
 meshname =anuga.join('Sullivans.tsh')
-print 'Basename ',basename
+print('Basename ',basename)
 #+++++END_SCENARIOS_BLOCK
 
 #+++++START_PREPARE TERRAIN_BLOCK
@@ -82,9 +82,9 @@ print 'Basename ',basename
 # Preparation of topographic data
 # Convert ASC 2 DEM 2 PTS using source data and store result in source data
 #------------------------------------------------------------------------------
-print ' Preparing Terrain'
+print(' Preparing Terrain')
 #+++++START_SETUP_MESH_BLOCK
-print ' Setup Mesh to be the Computational Grid'
+print(' Setup Mesh to be the Computational Grid')
 #------------------------------------------------------------------------------
 # Set up Computational Domain from an Extent and possibly  a Catchment Polygon
 #------------------------------------------------------------------------------
@@ -109,7 +109,7 @@ S=6091501.0
 RangeX=E-W
 RangeY=N-S
 domain_Area= RangeX*RangeY
-print' Domain is',RangeX,' x ',RangeY,' = ',domain_Area,' m2'
+print(' Domain is',RangeX,' x ',RangeY,' = ',domain_Area,' m2')
 bounding_polygon = [[W, S], [E, S], [E, N], [W, N]]
 alpha = 0.99                                # smoothing of mesh (0 is not smooth 1 is smoothest)
 verbose=True
@@ -134,7 +134,7 @@ interior_holes = anuga.get_polygon_list_from_files(Interior_Holes_directory)
 #--------------------------------------------------------------------------
 
 if myid == 0:
-    print ' Creating Mesh'
+    print(' Creating Mesh')
     if TESTING_ONLY == True:
         anuga.create_mesh_from_regions(bounding_polygon,
                          boundary_tags={'south': [0],
@@ -172,7 +172,7 @@ if myid == 0:
     # run parameters
     
     
-    print domain.geo_reference
+    print(domain.geo_reference)
 
     #domain.set_store_vertices_uniquely(False)
     #domain.set_maximum_allowed_speed(20.0)
@@ -189,7 +189,7 @@ if myid == 0:
      """
     # Do not store water shallower than 1 cm
     domain.set_minimum_storable_height(0.01) # Eg 0.05 = 50mm
-    print domain.statistics()
+    print(domain.statistics())
     domain.set_name(outname)
     #------------------------------------------------------------------------------
     #  DOMAIN Created with parameters Set
@@ -210,7 +210,7 @@ if myid == 0:
     #------------------------------------------------------------------------------
     # SET ELEVATION to MESH to Describe the Terrain
     #------------------------------------------------------------------------------
-    print ' Setting Quantities for Elevation over Domain... from...',basename +'.csv'
+    print(' Setting Quantities for Elevation over Domain... from...',basename +'.csv')
     if TESTING_ONLY == True:
 #         domain.set_quantity('elevation',
 #                     filename=basename+'.csv',
@@ -250,7 +250,7 @@ if myid == 0:
     # APPLY MANNING'S ROUGHNESSES
     #------------------------------------------------------------------------------
 
-    print ' Setting Quantities for Roughness....'
+    print(' Setting Quantities for Roughness....')
     base_friction = 0.0452 # this sets the roughness of the roads
     domain.set_quantity('friction', base_friction)   # Set all to 1friction for NOW  !!!!
     #domain.set_quantity('friction',0.1)
@@ -258,7 +258,7 @@ if myid == 0:
 else:
     domain = None
 
-if myid == 0 and verbose: print 'DISTRIBUTING DOMAIN'
+if myid == 0 and verbose: print('DISTRIBUTING DOMAIN')
 domain = distribute(domain)
 
 #------------------------------------------------------------------------------
@@ -274,7 +274,7 @@ domain = distribute(domain)
 # eg if u have a basin that has water in it already u can nominate a polyline
 # and set the stage level inside that polyline
 #------------------------------------------------------------------------------
-print ' Setting Quantities for Initial Water Levels...'
+print(' Setting Quantities for Initial Water Levels...')
 base_stage = Start_Tide # Set starting tide....
 
 domain.set_quantity('stage',base_stage)
@@ -320,13 +320,13 @@ if RAIN_FALL == True:
 # ****** Setup BOUNDARY CONDITIONS AT THE START OF THE RUN ******
 #------------------------------------------------------------------------------
 
-print 'Available boundary tags', domain.get_boundary_tags()
+print('Available boundary tags', domain.get_boundary_tags())
 
 Br = anuga.Reflective_boundary(domain)
 Bd = anuga.Dirichlet_boundary([base_stage,0,0])
 
 
-print 'Available boundary tags are', domain.get_boundary_tags()
+print('Available boundary tags are', domain.get_boundary_tags())
 
 
 # boundary conditions for slide scenario
@@ -380,8 +380,8 @@ domain.set_boundary({'west': Br,
 # EVOLVE SYSTEM THROUGH TIME
 #------------------------------------------------------------------------------
 
-if myid == 0 and verbose: print 'EVOLVE'
-print 'START Computation for Model Scenario EVOLUTION...'
+if myid == 0 and verbose: print('EVOLVE')
+print('START Computation for Model Scenario EVOLUTION...')
 
 domain.set_starttime(starttime)
 time0 = time.time()
@@ -413,18 +413,18 @@ for t in domain.evolve(yieldstep = yieldstep, finaltime = finaltime): # All day 
         initial_water_volume = water_volume
         
     if myid == 0:
-        print domain.timestepping_statistics()
-        print '  added water volume',water_volume - initial_water_volume
+        print(domain.timestepping_statistics())
+        print('  added water volume',water_volume - initial_water_volume)
 
 
 if myid == 0:
-    print 'Number of processors %g ' %numprocs
-    print 'That took %.2f seconds' %(time.time()-time0)
-    print 'Communication time %.2f seconds'%domain.communication_time
-    print 'Reduction Communication time %.2f seconds'%domain.communication_reduce_time
-    print 'Broadcast time %.2f seconds'%domain.communication_broadcast_time
+    print('Number of processors %g ' %numprocs)
+    print('That took %.2f seconds' %(time.time()-time0))
+    print('Communication time %.2f seconds'%domain.communication_time)
+    print('Reduction Communication time %.2f seconds'%domain.communication_reduce_time)
+    print('Broadcast time %.2f seconds'%domain.communication_broadcast_time)
 
-print 'END OF RUN............'
+print('END OF RUN............')
 
 #domain.dump_triangulation()
 
@@ -443,6 +443,6 @@ domain.sww_merge(delete_old=True)
 
 finalize()
 
-print 'Finished'
+print('Finished')
 
 #================    END OF RUN FILE ===================================

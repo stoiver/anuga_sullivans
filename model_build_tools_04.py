@@ -91,10 +91,10 @@ def get_polygon_list_from_files(dir):
     """
     
     from anuga.geometry.polygon import read_polygon
-    print 'Reading polygons from ' + dir
+    print('Reading polygons from ' + dir)
     polylist = []
     for filename in os.listdir(dir):
-        print filename
+        print(filename)
         polylist.append(read_polygon(os.path.join(dir, filename)))
     return polylist
 
@@ -137,17 +137,17 @@ def get_REFINE_polygon_value_list(dir):
     These lists can either be used as interior regions in mesh refinement or as input to Polygon_function
     """
     
-    print 'Mesh Refinement Triangular Area Values are assigned from Directory name with underscore being decimal point'    
-    print 'Note So using 0_10 limits Triangles to 0.1m2 etc..'
+    print('Mesh Refinement Triangular Area Values are assigned from Directory name with underscore being decimal point')    
+    print('Note So using 0_10 limits Triangles to 0.1m2 etc..')
     D = get_polygon_dictionary(dir)
     polygon_value_list = []
     for key in D:
         try:
             numb_bits = key.split('_')
             attribute = float(numb_bits[0]+'.'+numb_bits[1])
-            print 'Target Mesh Cell Area = ' + str(attribute)
+            print('Target Mesh Cell Area = ' + str(attribute))
         except:
-            print 'Non numerical attributes not yet implemented. I got %s' % key
+            print('Non numerical attributes not yet implemented. I got %s' % key)
             return []
         for polygon in D[key]:
             # Create polygon-value pair and append to list for this dir
@@ -168,17 +168,17 @@ def get_ROUGHNESS_polygon_value_list(dir):
     These lists can either be used as interior regions in mesh refinement or as input to Polygon_function
     """
 
-    print 'Roughness Values are assigned from Directory name :'
-    print 'so that 0_085 = mannings rougness of 0.085'
+    print('Roughness Values are assigned from Directory name :')
+    print('so that 0_085 = mannings rougness of 0.085')
     D = get_polygon_dictionary(dir)
     polygon_value_list = []
     for key in D:
         try:
             numb_bits = key.split('_')
             attribute = float(numb_bits[0]+'.'+numb_bits[1])
-            print 'Mannings Roughness = ' + str(attribute)
+            print('Mannings Roughness = ' + str(attribute))
         except:
-            print 'Non numerical attributes not yet implemented. I got %s' % key
+            print('Non numerical attributes not yet implemented. I got %s' % key)
             return []
         for polygon in D[key]:
             # Create polygon-value pair and append to list for this dir
@@ -198,17 +198,17 @@ def get_STAGE_polygon_value_list(dir):
        get_polygon_dictionary
     These lists can either be used as interior regions in mesh refinement or as input to Polygon_function
     """
-    print 'STAGE LEVEL Values are assigned from Directory name :'
-    print 'So with 0_36 directory name = 0.36m in height'
+    print('STAGE LEVEL Values are assigned from Directory name :')
+    print('So with 0_36 directory name = 0.36m in height')
     D = get_polygon_dictionary(dir)
     polygon_value_list = []
     for key in D:
         try:
             numb_bits = key.split('_')
             attribute = float(numb_bits[0]+'.'+numb_bits[1])
-            print 'Stage Set to = ' + str(attribute)
+            print('Stage Set to = ' + str(attribute))
         except:
-            print 'Non numerical attributes not yet implemented. I got %s' % key
+            print('Non numerical attributes not yet implemented. I got %s' % key)
             return []
         for polygon in D[key]:
             # Create polygon-value pair and append to list for this dir
@@ -230,17 +230,17 @@ def get_BUILDING_polygon_value_list(dir):
     These lists can either be used as interior regions in mesh refinement or as input to Polygon_function
     """
 
-    print 'BUILDING HEIGHT Values are assigned from Directory name:'
-    print 'So with directory name 36_5 height = 36.5m '
+    print('BUILDING HEIGHT Values are assigned from Directory name:')
+    print('So with directory name 36_5 height = 36.5m ')
     D = get_polygon_dictionary(dir)
     polygon_value_list = []
     for key in D:
         try:
             numb_bits = key.split('_')
             attribute = float(numb_bits[0]+'.'+numb_bits[1])
-            print 'Building Height set to ' + str(attribute)
+            print('Building Height set to ' + str(attribute))
         except:
-            print 'Non numerical attributes not yet implemented. I got %s' % key
+            print('Non numerical attributes not yet implemented. I got %s' % key)
             return []
         for polygon in D[key]:
             # Create polygon-value pair and append to list for this dir
@@ -258,15 +258,15 @@ def get_POLYS_from_Multi_polyfile(dir):
        get_polygon_dictionary
     These lists can either be used as interior regions in mesh refinement or as input to Polygon_function
     """
-    print 'Getting File with Multiple POLYS from Directory:'
-    print 'The one file will be used to create multiple Polys for ANUGA'
+    print('Getting File with Multiple POLYS from Directory:')
+    print('The one file will be used to create multiple Polys for ANUGA')
     filepattern='*.xyz'   # get a list of matching filenames in the directory, MAKE SURE only 1 csv file is in the DIR
     pattern = os.path.join(dir, filepattern)
     holes_file_list = glob.glob(pattern)  # List of Files has only 1 in it
-    print 'Holes file_List:-',holes_file_list
+    print('Holes file_List:-',holes_file_list)
     for fd in holes_file_list:
         holes_file=fd
-        print 'holes file:-',holes_file
+        print('holes file:-',holes_file)
         infid = open(holes_file, 'r')
     # Got the Multi Poly file now process
     polylist = []
@@ -274,7 +274,7 @@ def get_POLYS_from_Multi_polyfile(dir):
     Poly_count=0
     lines = infid.readlines() # Reads ALL Lines in file infid
     total_lines_in_file= len(lines)
-    print "total number of lines in the Holes FILE is: ",total_lines_in_file
+    print("total number of lines in the Holes FILE is: ",total_lines_in_file)
     for i, line in enumerate(lines): # ==================================================== FOR LOOP ===========================
         if line.strip().startswith('####'):
             check_pts_list=[]
@@ -285,15 +285,15 @@ def get_POLYS_from_Multi_polyfile(dir):
                 outfid.close()
             Poly_count+=1
             # Create A poly File for each polygon defined in the Multi-Poly file
-            print 'Polygon #',Poly_count
+            print('Polygon #',Poly_count)
             path_poly=os.path.dirname(os.path.dirname(holes_file))
-            print path_poly
+            print(path_poly)
             poly_write_file="Poly_"+str(Poly_count)+".csv"
             outfid = open(os.path.join(path_poly,poly_write_file), 'w')
             polygon=[]
             # Instead write to a List
         else:
-            print line
+            print(line)
             fields = line.split(',')
             polygon.append([float(fields[0]),float(fields[1])])
             #line.rstrip('\n'))  # Add Points [x,y]
@@ -317,16 +317,16 @@ def get_POLYS_from_Mid_Mif(dir):
        get_polygon_dictionary
     These lists can either be used as interior regions in mesh refinement or as input to Polygon_function
     """
-    print 'Getting File with Multiple POLYS from Directory:'
-    print 'The one file will be used to create multiple Polys for ANUGA'
+    print('Getting File with Multiple POLYS from Directory:')
+    print('The one file will be used to create multiple Polys for ANUGA')
     filepattern='*.mif'   # get a list of matching filenames in the directory, MAKE SURE only 1 csv file is in the DIR
     pattern = os.path.join(dir, filepattern)
     holes_file_list = glob.glob(pattern)  # List of Files has only 1 in it
-    print 'From DIR: ',dir
-    print 'Holes file_List:-',holes_file_list
+    print('From DIR: ',dir)
+    print('Holes file_List:-',holes_file_list)
     for fd in holes_file_list:
         holes_file=fd
-        print 'holes file:-',holes_file
+        print('holes file:-',holes_file)
         infid = open(holes_file, 'r')
     # Got the Multi Poly file now process
     polylist = []
@@ -336,7 +336,7 @@ def get_POLYS_from_Mid_Mif(dir):
     Points_in_Poly = 100
     lines = infid.readlines() # Reads ALL Lines in file infid
     total_lines_in_file= len(lines)
-    print "total number of lines in the Holes FILE is: ",total_lines_in_file
+    print("total number of lines in the Holes FILE is: ",total_lines_in_file)
     for i, line in enumerate(lines): # ==================================================== FOR LOOP ===========================
 
 
@@ -351,9 +351,9 @@ def get_POLYS_from_Mid_Mif(dir):
                 outfid.close()
             Poly_count+=1
             # Create A poly File for each polygon defined in the Multi-Poly file
-            print 'Polygon #',Poly_count
+            print('Polygon #',Poly_count)
             path_poly=os.path.dirname(os.path.dirname(holes_file))
-            print path_poly
+            print(path_poly)
             poly_write_file="Poly_"+str(Poly_count)+".csv"
             outfid = open(os.path.join(path_poly,poly_write_file), 'w')
             polygon=[]
@@ -365,7 +365,7 @@ def get_POLYS_from_Mid_Mif(dir):
         else:
             Poly_line_count+=1
             if Poly_line_count > 1 and Poly_line_count <= (Points_in_Poly+1) and Poly_count<>0:
-                print line, Points_in_Poly,Poly_line_count
+                print(line, Points_in_Poly,Poly_line_count)
                 fields = line.split(' ')
                 polygon.append([float(fields[0]),float(fields[1])])
                 #line.rstrip('\n'))  # Add Points [x,y]
@@ -377,13 +377,13 @@ def get_POLYS_from_Mid_Mif(dir):
                     check_pts_list.append(line)
             elif Poly_line_count==1 and Poly_count<>0:
                 # read number of points in poly
-                print 'line=',line
+                print('line=',line)
                 Points_in_Poly=int(line)
-                print 'Number Points in Poly =',Points_in_Poly
+                print('Number Points in Poly =',Points_in_Poly)
                 
         #raw_input('Check Output...')            
     outfid.close()  
     
     polylist.append(polygon)    # Add polygon to the list of Polys
-    print polylist
+    print(polylist)
     return polylist    

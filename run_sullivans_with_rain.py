@@ -36,7 +36,7 @@ if verbose and anuga.myid == 0 :
 else:
     print_flag = False
 
-if print_flag: print ' ABOUT to Start Simulation'
+if print_flag: print(' ABOUT to Start Simulation')
 
 #+++++START_SCENARIOS_BLOCK
 #------------------------------------------------------------------------------
@@ -63,7 +63,7 @@ outname = anuga.join('Sullivans'+ Outname_Ext+RAIN_EVENT )
 meshname =anuga.join('Sullivans.tsh')
 
 
-if print_flag : print 'Basename ',basename
+if print_flag : print('Basename ',basename)
 
 
 W=689801.0
@@ -75,7 +75,7 @@ S=6091501.0
 RangeX=E-W
 RangeY=N-S
 domain_Area= RangeX*RangeY
-if print_flag: print' Domain is',RangeX,' x ',RangeY,' = ',domain_Area,' m2'
+if print_flag: print(' Domain is',RangeX,' x ',RangeY,' = ',domain_Area,' m2')
 
 
 bounding_polygon = [[W, S], [E, S], [E, N], [W, N]]
@@ -97,7 +97,7 @@ interior_holes = anuga.get_polygon_list_from_files(Interior_Holes_directory)
 #--------------------------------------------------------------------------
 
 if anuga.myid == 0:
-    if print_flag: print ' Creating Mesh'
+    if print_flag: print(' Creating Mesh')
     
     domain = anuga.create_domain_from_regions(bounding_polygon,
                      boundary_tags={'south': [0],
@@ -113,11 +113,11 @@ if anuga.myid == 0:
 
     
     domain.set_zone(55)
-    if print_flag: print domain.geo_reference
+    if print_flag: print(domain.geo_reference)
 
     # Do not store water shallower than 50 cm
     domain.set_minimum_storable_height(0.005) # Eg 0.05 = 50mm
-    if print_flag: print domain.statistics()
+    if print_flag: print(domain.statistics())
     
     domain.set_name(outname)
 
@@ -134,7 +134,7 @@ if anuga.myid == 0:
     #------------------------------------------------------------------------------
     # SET ELEVATION to MESH to Describe the Terrain
     #------------------------------------------------------------------------------
-    if print_flag: print ' Setting Quantities for Elevation over Domain... from...',basename +'.csv'
+    if print_flag: print(' Setting Quantities for Elevation over Domain... from...',basename +'.csv')
         
     domain.set_quantity('elevation',filename=join('01_DEM','Test_Sullivans_Grd.grd.asc'))
     domain.set_quantity('stage',558)
@@ -156,7 +156,7 @@ if anuga.myid == 0:
     # APPLY MANNING'S ROUGHNESSES
     #------------------------------------------------------------------------------
 
-    if print_flag: print ' Setting Quantities for Roughness....'
+    if print_flag: print(' Setting Quantities for Roughness....')
     base_friction = 0.0452 # this sets the roughness of the roads
     domain.set_quantity('friction', base_friction)   # Set all to 1friction for NOW  !!!!
 
@@ -164,7 +164,7 @@ if anuga.myid == 0:
 else:
     domain = None
 
-if print_flag: print 'DISTRIBUTING DOMAIN'
+if print_flag: print('DISTRIBUTING DOMAIN')
 domain = anuga.distribute(domain)
 
 #------------------------------------------------------------------------------
@@ -179,7 +179,7 @@ domain = anuga.distribute(domain)
 # eg if u have a basin that has water in it already u can nominate a polyline
 # and set the stage level inside that polyline
 #------------------------------------------------------------------------------
-if print_flag: print ' Setting Quantities for Initial Water Levels...'
+if print_flag: print(' Setting Quantities for Initial Water Levels...')
 
 base_stage = Start_Tide # Set starting tide....
 
@@ -203,7 +203,7 @@ Br = anuga.Reflective_boundary(domain)
 Bd = anuga.Dirichlet_boundary([base_stage,0,0])
 
 
-print 'Available boundary tags for proc',anuga.myid, 'are', domain.get_boundary_tags()
+print('Available boundary tags for proc',anuga.myid, 'are', domain.get_boundary_tags())
 
 
 # boundary conditions for slide scenario
@@ -237,8 +237,8 @@ rain = Calibrated_radar_rain(RADAR_DIR,
                              verbose=print_flag)
 
 if anuga.myid == 0:
-    print rain.extent
-    print bounding_polygon
+    print(rain.extent)
+    print(bounding_polygon)
     stats = rain.accumulate_data_stats(polygon=Catchment_Rain_Polygon, print_stats=True)
 
 
@@ -264,7 +264,7 @@ domain.set_quantity('rain', raster=rain_raster, location="centroids")
 rain_fall = anuga.collect_value(Q.get_integral())
 
 if anuga.myid == 0:
-    print 'Accum Rain', rain_fall
+    print('Accum Rain', rain_fall)
     
 
 rain_operator = anuga.Rate_operator(domain, 
@@ -281,8 +281,8 @@ rain_operator = anuga.Rate_operator(domain,
 # EVOLVE SYSTEM THROUGH TIME
 #------------------------------------------------------------------------------
 
-if anuga.myid == 0 and verbose: print 'EVOLVE'
-if anuga.myid == 0 and verbose: print 'START Computation for Model Scenario EVOLUTION...'
+if anuga.myid == 0 and verbose: print('EVOLVE')
+if anuga.myid == 0 and verbose: print('START Computation for Model Scenario EVOLUTION...')
 
 
 time0 = time.time()
@@ -291,7 +291,7 @@ starttime = rain.start_time
 domain.set_starttime(starttime)
 
 if anuga.myid == 0:
-    print 'Start_Time: ' + domain.get_datetime()
+    print('Start_Time: ' + domain.get_datetime())
 
 duration = 60*60*8
 yieldstep = 60 # 1 min
@@ -313,14 +313,14 @@ for t in domain.evolve(yieldstep = yieldstep, duration = duration): # All day 87
             rain_raster = (rain.x, rain.y, rain.data_slices[j])
             domain.set_quantity('rain',raster=rain_raster,location="centroids")
             if anuga.myid == 0:
-                print "UPDATING TO TIMESLICE %g"% j
+                print("UPDATING TO TIMESLICE %g"% j)
                 #rain.plot_data(j, show=True, polygons=[p2,p3])
                 #import time
                 #time.sleep(0.05)
         else:
             # At end of slices
             if anuga.myid == 0:
-                print "AFTER LAST TIMESLICE"
+                print("AFTER LAST TIMESLICE")
             upper = float("inf")
             domain.set_quantity('rain', 0.0, location="centroids")
             
@@ -331,8 +331,8 @@ for t in domain.evolve(yieldstep = yieldstep, duration = duration): # All day 87
         initial_water_volume = water_volume
         
     if anuga.myid == 0:
-        print domain.timestepping_statistics()
-        print '  Added water volume',water_volume - initial_water_volume
+        print(domain.timestepping_statistics())
+        print('  Added water volume',water_volume - initial_water_volume)
         
         
         
@@ -341,13 +341,13 @@ if anuga.myid == 0:
     pl.ioff()
 
 if anuga.myid == 0:
-    print 'Number of processors %g ' %anuga.numprocs
-    print 'That took %.2f seconds' %(time.time()-time0)
-    print 'Communication time %.2f seconds'%domain.communication_time
-    print 'Reduction Communication time %.2f seconds'%domain.communication_reduce_time
-    print 'Broadcast time %.2f seconds'%domain.communication_broadcast_time
+    print('Number of processors %g ' %anuga.numprocs)
+    print('That took %.2f seconds' %(time.time()-time0))
+    print('Communication time %.2f seconds'%domain.communication_time)
+    print('Reduction Communication time %.2f seconds'%domain.communication_reduce_time)
+    print('Broadcast time %.2f seconds'%domain.communication_broadcast_time)
 
-if anuga.myid == 0 and verbose: print 'END OF RUN............'
+if anuga.myid == 0 and verbose: print('END OF RUN............')
 
 
 
@@ -355,6 +355,6 @@ domain.sww_merge(delete_old=True)
 
 anuga.finalize()
 
-if anuga.myid == 0 and verbose: print 'Finished'
+if anuga.myid == 0 and verbose: print('Finished')
 
 #================    END OF RUN FILE ===================================

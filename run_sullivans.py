@@ -31,7 +31,7 @@ from anuga import Inlet_operator, Boyd_box_operator
 from sullivans import *
 
 if myid == 0:
-    print 'Got all  Modules...'
+    print('Got all  Modules...')
 
 
 #+++++END_MODULES_BLOCK
@@ -91,18 +91,18 @@ mannings = args.mannings
 
 
 if myid == 0:
-    print RAIN_EVENT
-    print duration
-    print yieldstep
-    print alg
-    print mannings
+    print(RAIN_EVENT)
+    print(duration)
+    print(yieldstep)
+    print(alg)
+    print(mannings)
     
 basename = anuga.join('01_DEM','Sullivans_DEM_1_10_50')
 
 outname = anuga.join('Sullivans'+ Outname_Ext+RAIN_EVENT )
 meshname =anuga.join('Sullivans.tsh')
 
-if myid == 0: print 'Basename ',basename
+if myid == 0: print('Basename ',basename)
 
 #+++++END_SCENARIOS_BLOCK
 
@@ -111,9 +111,9 @@ if myid == 0: print 'Basename ',basename
 # Preparation of topographic data
 # Convert ASC 2 DEM 2 PTS using source data and store result in source data
 #------------------------------------------------------------------------------
-if myid == 0: print ' Preparing Terrain'
+if myid == 0: print(' Preparing Terrain')
 #+++++START_SETUP_MESH_BLOCK
-if myid == 0: print ' Setup Mesh to be the Computational Grid'
+if myid == 0: print(' Setup Mesh to be the Computational Grid')
 
 #------------------------------------------------------------------------------
 # Set up Computational Domain from an Extent and possibly  a Catchment Polygon
@@ -139,7 +139,7 @@ S=6091501.0
 RangeX=E-W
 RangeY=N-S
 domain_Area= RangeX*RangeY
-if myid == 0 : print' Domain is',RangeX,' x ',RangeY,' = ',domain_Area,' m2'
+if myid == 0 : print(' Domain is',RangeX,' x ',RangeY,' = ',domain_Area,' m2')
 bounding_polygon = [[W, S], [E, S], [E, N], [W, N]]
 alpha = 0.99                                # smoothing of mesh (0 is not smooth 1 is smoothest)
 
@@ -188,7 +188,7 @@ interior_holes = interior_holes + [Manning, Union]
 #--------------------------------------------------------------------------
 
 if myid == 0:
-    print ' Creating Mesh'
+    print(' Creating Mesh')
     anuga.create_mesh_from_regions(bounding_polygon,
                      boundary_tags={'south': [0],
                                     'east': [1],
@@ -214,7 +214,7 @@ if myid == 0:
     # run parameters
     
     domain.geo_reference.zone = 55
-    print domain.geo_reference
+    print(domain.geo_reference)
 
     domain.set_store_vertices_uniquely(False)
     #domain.set_maximum_allowed_speed(20.0)
@@ -234,7 +234,7 @@ if myid == 0:
     # Do not store water shallower than 5 cm
     domain.set_minimum_storable_height(0.05) # Eg 0.05 = 50mm
     
-    print domain.statistics()
+    print(domain.statistics())
     domain.set_name(outname, timestamp=True)
     #------------------------------------------------------------------------------
     #  DOMAIN Created with parameters Set
@@ -255,7 +255,7 @@ if myid == 0:
     #------------------------------------------------------------------------------
     # SET ELEVATION to MESH to Describe the Terrain and set STAGE to fill lake
     #------------------------------------------------------------------------------
-    print ' Setting Quantities for Elevation over Domain... from...',basename +'.csv'
+    print(' Setting Quantities for Elevation over Domain... from...',basename +'.csv')
     domain.set_quantity('elevation',
                 filename=join('01_DEM','Test_Sullivans_Grd.grd.asc'),
                 use_cache=False,
@@ -309,7 +309,7 @@ if myid == 0:
     # APPLY MANNING'S ROUGHNESSES
     #------------------------------------------------------------------------------
 
-    print ' Setting Quantities for Roughness....'
+    print(' Setting Quantities for Roughness....')
     base_friction = 0.0452 # this sets the roughness of the roads
     domain.set_quantity('friction', base_friction)   # Set all to 1friction for NOW  !!!!
     #domain.set_quantity('friction',0.1)
@@ -325,7 +325,7 @@ if myid == 0:
 else:
     domain = None
 
-if verbose: print 'DISTRIBUTING DOMAIN'
+if verbose: print('DISTRIBUTING DOMAIN')
 
 domain = distribute(domain)
 
@@ -345,7 +345,7 @@ domain.riverwallData.create_riverwalls(riverWall)
 # eg if u have a basin that has water in it already u can nominate a polyline
 # and set the stage level inside that polyline
 #------------------------------------------------------------------------------
-if myid == 0: print ' Setting Quantities for Initial Water Levels...'
+if myid == 0: print(' Setting Quantities for Initial Water Levels...')
 base_stage = Start_Tide # Set starting tide....
 
 
@@ -375,7 +375,7 @@ if RAIN_FALL:
         rainfall = anuga.file_function(join('03_FORCEFUNC','500y_des_rain.tms'), quantities=['rate'])
     else:
         msg = "RAIN_EVENT not in EVENT_OPTIONS"
-        print msg
+        print(msg)
     
 
     if RAIN_EVENT in EVENT_OPTIONS :
@@ -421,25 +421,25 @@ domain.set_boundary({'west': Bd,
 #------------------------------------------------------------------------------
 
 if myid == 0 and verbose: 
-    print 'EVOLVE'
-    print 'START Computation for Model Scenario EVOLUTION...'
+    print('EVOLVE')
+    print('START Computation for Model Scenario EVOLUTION...')
 
 domain.set_starttime(starttime)
 time0 = time.time()
 
 for t in domain.evolve(yieldstep = yieldstep, duration = duration + (-starttime) ): # All day 87300, and a bit... 90000
     if myid == 0:
-        print domain.timestepping_statistics(relative_time=False)
+        print(domain.timestepping_statistics(relative_time=False))
 
 
 if myid == 0:
-    print 'Number of processors %g ' %numprocs
-    print 'That took %.2f seconds' %(time.time()-time0)
-    print 'Communication time %.2f seconds'%domain.communication_time
-    print 'Reduction Communication time %.2f seconds'%domain.communication_reduce_time
-    print 'Broadcast time %.2f seconds'%domain.communication_broadcast_time
+    print('Number of processors %g ' %numprocs)
+    print('That took %.2f seconds' %(time.time()-time0))
+    print('Communication time %.2f seconds'%domain.communication_time)
+    print('Reduction Communication time %.2f seconds'%domain.communication_reduce_time)
+    print('Broadcast time %.2f seconds'%domain.communication_broadcast_time)
 
-if myid == 0: print 'END OF EVOLVE............'
+if myid == 0: print('END OF EVOLVE............')
 
 time0 = time.time()
 
@@ -459,6 +459,6 @@ time0 = time.time()
 
 finalize()
 
-if myid == 0: print 'Finished'
+if myid == 0: print('Finished')
 
 #================    END OF RUN FILE ===================================
