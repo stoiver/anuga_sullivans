@@ -61,7 +61,7 @@ def_manning = 0.01
 starttime = 0*3600 # time to fill up lake
 
 def_duration =  8*3600  # duration in seconds
-def_yieldstep = 300 # 5 min
+def_yieldstep = 30 # 5 min
 
 Start_Tide = 558.0
 RAIN_FALL = True
@@ -200,7 +200,7 @@ if myid == 0:
                      breaklines=breaklines,
                      filename=meshname,
                      use_cache=False,
-                     verbose=True)
+                     verbose=False)
     #------------------------------------------------------------------------------
     #  Computational MESH Created
     #------------------------------------------------------------------------------
@@ -213,7 +213,8 @@ if myid == 0:
     domain = anuga.Domain(meshname, use_cache=False, verbose=True)
     # run parameters
     
-    domain.geo_reference.zone = 55
+    #domain.geo_reference.zone = 55
+    domain.set_epsg(32755)
     print(domain.geo_reference)
 
     domain.set_store_vertices_uniquely(False)
@@ -379,7 +380,7 @@ if RAIN_FALL:
     
 
     if RAIN_EVENT in EVENT_OPTIONS :
-        RAIN1 = anuga.Rate_operator(domain, rate=rainfall, factor=1.0e-3, relative_time=False, \
+        RAIN1 = anuga.Rate_operator(domain, rate=rainfall, factor=1.0e-3, \
                           polygon=RAINFALL_POLYGON, default_rate = 0.0)
     
 if DRAINING:
