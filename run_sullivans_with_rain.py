@@ -42,7 +42,7 @@ if print_flag: print(' ABOUT to Start Simulation')
 #------------------------------------------------------------------------------
 # Define scenarios - Here have the ability to easily create multiple scenarios if Reqd.
 #------------------------------------------------------------------------------
-EVENT_OPTIONS = ['50pc','20pc','10pc''5pc','1pc','p2pc','pmf']
+EVENT_OPTIONS = ['50pc','20pc','10pc','05pc','1pc','p2pc','pmf']
 
 ENTIRE_CATCHMENT = True
 

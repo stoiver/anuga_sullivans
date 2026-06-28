@@ -43,7 +43,7 @@ if myid == 0 : verbose = True
 #------------------------------------------------------------------------------
 # Define scenarios - Here have the ability to easily create multiple scenarios if Reqd.
 #------------------------------------------------------------------------------
-EVENT_OPTIONS = ['50pc','20pc','10pc','5pc','1pc','p2pc','pmf']
+EVENT_OPTIONS = ['50pc','20pc','10pc','05pc','1pc','p2pc','pmf']
 
 ENTIRE_CATCHMENT = True
 
@@ -300,8 +300,8 @@ if RAIN_FALL == True:
         rainfall = anuga.file_function(join('03_FORCEFUNC','20pc_des_rain.tms'), quantities=['rate'])
     if RAIN_EVENT =='10pc':
         rainfall = anuga.file_function(join('03_FORCEFUNC','10pc_des_rain.tms'), quantities=['rate'])
-    if RAIN_EVENT =='5pc':
-        rainfall = anuga.file_function(join('03_FORCEFUNC','5pc_des_rain.tms'), quantities=['rate'])
+    if RAIN_EVENT =='05pc':
+        rainfall = anuga.file_function(join('03_FORCEFUNC','05pc_des_rain.tms'), quantities=['rate'])
     if RAIN_EVENT =='1pc':
         rainfall = anuga.file_function(join('03_FORCEFUNC','ACT_100yr_2hr.tms'), quantities=['rate'])
     if RAIN_EVENT =='p2pc':
