@@ -55,9 +55,11 @@ Shared configuration lives in `sullivans.py` (17+ named polygons for water bodie
 | `01_DEM/` | Digital Elevation Model rasters |
 | `02_POLYS/` | Mesh refinement polygons and interior holes |
 | `03_FORCEFUNC/` | Rainfall forcing functions (CSV/NetCDF) |
-| `04_RAINFALL/` | BOM radar rainfall fields (2010–2012, `Rainfields_Rudy.VanDrie_*`) |
+| `04_RAINFALL/` | BOM radar rainfall fields (2010–2012, `rainfields_rudy.vandrie_ndrp_act_20130909/`) plus sample `.pts`/`.asc` outputs |
 | `05_SHAPEFILES/` | Creek centrelines, bridge outlines, bank polygons |
-| `culverts-bridges/` | Culvert geometry and reference data |
+| `07_CSVFILES/` | Polygon/feature CSVs (creek, bridge, bank outlines) exported from the shapefiles |
+| `culverts-bridges/` | Culvert geometry and reference data (MapInfo `.mid`/`.mif`, survey TIFs under `sullivans_data/`) |
+| `2018-Flood/` | Reference imagery and BOM rainfall IFD data for the Feb 2018 flood event |
 
 ## Spatial Reference
 
